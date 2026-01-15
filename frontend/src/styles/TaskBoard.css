@@ -1,0 +1,92 @@
+.task-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  min-height: 600px;
+}
+ 
+.task-column {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+ 
+.task-column.drag-over {
+  background: #f0f4ff;
+  border: 2px dashed #667eea;
+}
+ 
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+ 
+.column-header h2 {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+ 
+.task-count {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+ 
+.tasks-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
+}
+ 
+.tasks-container::-webkit-scrollbar {
+  width: 6px;
+}
+ 
+.tasks-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+ 
+.tasks-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+ 
+.tasks-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+ 
+.empty-column {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  font-style: italic;
+}
+ 
+/* Responsive */
+@media (max-width: 1024px) {
+  .task-board {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .tasks-container {
+    max-height: 400px;
+  }
+}
+ 
