@@ -25,9 +25,20 @@ const AdminDashboard: React.FC = () => {
     loadAnalytics();
   }, []);
  
+  // IMPORTANT: Reload analytics whenever showAnalytics changes
+  useEffect(() => {
+    if (showAnalytics) {
+      console.log('Analytics view opened - refreshing data...');
+      loadAnalytics();
+      loadTasks(); // Also refresh tasks to get latest data
+    }
+  }, [showAnalytics]);
+ 
   const loadTasks = async () => {
     try {
+      console.log('Loading tasks...');
       const data = await adminAPI.getTasks();
+      console.log('Tasks loaded:', data);
       setTasks(data);
     } catch (error) {
       console.error('Error loading tasks:', error);
@@ -45,7 +56,9 @@ const AdminDashboard: React.FC = () => {
  
   const loadAnalytics = async () => {
     try {
+      console.log('Loading analytics...');
       const data = await adminAPI.getAnalytics();
+      console.log('Analytics loaded:', data);
       setAnalytics(data);
     } catch (error) {
       console.error('Error loading analytics:', error);
@@ -72,8 +85,13 @@ const AdminDashboard: React.FC = () => {
       }
       setShowTaskForm(false);
       setEditingTask(null);
-      await loadTasks();
-      await loadAnalytics();
+      
+      // Reload all data after task changes
+      await Promise.all([
+        loadTasks(),
+        loadAnalytics()
+      ]);
+      
     } catch (error) {
       console.error('Error submitting task:', error);
       alert('Failed to save task');
@@ -89,8 +107,13 @@ const AdminDashboard: React.FC = () => {
  
     try {
       await adminAPI.deleteTask(taskId);
-      await loadTasks();
-      await loadAnalytics();
+      
+      // Reload all data after deletion
+      await Promise.all([
+        loadTasks(),
+        loadAnalytics()
+      ]);
+      
     } catch (error) {
       console.error('Error deleting task:', error);
       alert('Failed to delete task');
@@ -100,8 +123,13 @@ const AdminDashboard: React.FC = () => {
   const handleStatusChange = async (taskId: number, newStatus: string) => {
     try {
       await adminAPI.updateTask(taskId, { status: newStatus });
-      await loadTasks();
-      await loadAnalytics();
+      
+      // Reload all data after status change
+      await Promise.all([
+        loadTasks(),
+        loadAnalytics()
+      ]);
+      
     } catch (error) {
       console.error('Error updating task status:', error);
       alert('Failed to update task status');
@@ -111,8 +139,13 @@ const AdminDashboard: React.FC = () => {
   const handleAssignTask = async (taskId: number, userId: number | null) => {
     try {
       await adminAPI.updateTask(taskId, { assigned_to: userId });
-      await loadTasks();
-      await loadAnalytics();
+      
+      // Reload all data after assignment
+      await Promise.all([
+        loadTasks(),
+        loadAnalytics()
+      ]);
+      
     } catch (error) {
       console.error('Error assigning task:', error);
       alert('Failed to assign task');
@@ -122,6 +155,16 @@ const AdminDashboard: React.FC = () => {
   const handleLogout = () => {
     authService.logout();
     window.location.reload();
+  };
+ 
+  const handleShowAnalytics = () => {
+    setShowAssignmentView(false);
+    setShowAnalytics(!showAnalytics);
+  };
+ 
+  const handleShowAssignmentView = () => {
+    setShowAnalytics(false);
+    setShowAssignmentView(!showAssignmentView);
   };
  
   return (
@@ -136,19 +179,13 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div className="header-right">
           <button 
-            onClick={() => {
-              setShowAnalytics(false);
-              setShowAssignmentView(!showAssignmentView);
-            }} 
+            onClick={handleShowAssignmentView}
             className={showAssignmentView ? "btn-primary" : "btn-secondary"}
           >
             {showAssignmentView ? '📋 Task Board' : '👥 Assign Tasks'}
           </button>
           <button 
-            onClick={() => {
-              setShowAssignmentView(false);
-              setShowAnalytics(!showAnalytics);
-            }} 
+            onClick={handleShowAnalytics}
             className="btn-secondary"
           >
             {showAnalytics ? '📋 Show Tasks' : '📊 Analytics'}
@@ -163,8 +200,14 @@ const AdminDashboard: React.FC = () => {
       </header>
  
       <main className="dashboard-main">
+        {loading && (
+          <div className="loading-overlay">
+            <div className="loading-spinner">Loading...</div>
+          </div>
+        )}
+        
         {showAnalytics && analytics ? (
-          <Analytics analytics={analytics} />
+          <Analytics analytics={analytics} onRefresh={loadAnalytics} />
         ) : showAssignmentView ? (
           <TaskAssignmentView
             tasks={tasks}
@@ -200,3 +243,4 @@ const AdminDashboard: React.FC = () => {
 };
  
 export default AdminDashboard;
+ 
