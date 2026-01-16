@@ -75,21 +75,16 @@ const TaskTooltip: React.FC<TaskTooltipProps> = ({ title, tasks }) => {
                   </span>
                 </div>
                 
-                <p className="task-description">{task.description}</p>
+                {/* <p className="task-description">{task.description}</p> */}
                 
-                <div className="task-meta">
+                {/* <div className="task-meta">
                   <span className="status-badge">{getStatusBadge(task.status)}</span>
-                  {task.due_date && (
-                    <span className="due-date">📅 {formatDate(task.due_date)}</span>
-                  )}
-                  {task.assigned_user_name && (
-                    <span className="assigned-to">👤 {task.assigned_user_name}</span>
-                  )}
+                  
                 </div>
                 
                 {task.is_overdue && task.status !== 'done' && (
                   <div className="overdue-warning">⚠️ Overdue</div>
-                )}
+                )} */}
               </li>
             ))}
           </ul>

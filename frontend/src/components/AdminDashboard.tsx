@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Task, User, Analytics as AnalyticsType } from '../types';
 import { adminAPI } from '../services/api';
 import { authService } from '../services/auth';
-import TaskBoard from './TaskBoard';
 import TaskForm from './TaskForm';
 import Analytics from './Analytics';
 import TaskAssignmentView from './TaskAssignmentView';
@@ -15,7 +14,6 @@ const AdminDashboard: React.FC = () => {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
-  const [showAssignmentView, setShowAssignmentView] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentUser = authService.getUser();
  
@@ -25,12 +23,12 @@ const AdminDashboard: React.FC = () => {
     loadAnalytics();
   }, []);
  
-  // IMPORTANT: Reload analytics whenever showAnalytics changes
+  // Reload analytics when showing analytics view
   useEffect(() => {
     if (showAnalytics) {
       console.log('Analytics view opened - refreshing data...');
       loadAnalytics();
-      loadTasks(); // Also refresh tasks to get latest data
+      loadTasks();
     }
   }, [showAnalytics]);
  
@@ -120,22 +118,6 @@ const AdminDashboard: React.FC = () => {
     }
   };
  
-  const handleStatusChange = async (taskId: number, newStatus: string) => {
-    try {
-      await adminAPI.updateTask(taskId, { status: newStatus });
-      
-      // Reload all data after status change
-      await Promise.all([
-        loadTasks(),
-        loadAnalytics()
-      ]);
-      
-    } catch (error) {
-      console.error('Error updating task status:', error);
-      alert('Failed to update task status');
-    }
-  };
- 
   const handleAssignTask = async (taskId: number, userId: number | null) => {
     try {
       await adminAPI.updateTask(taskId, { assigned_to: userId });
@@ -157,14 +139,8 @@ const AdminDashboard: React.FC = () => {
     window.location.reload();
   };
  
-  const handleShowAnalytics = () => {
-    setShowAssignmentView(false);
+  const handleToggleView = () => {
     setShowAnalytics(!showAnalytics);
-  };
- 
-  const handleShowAssignmentView = () => {
-    setShowAnalytics(false);
-    setShowAssignmentView(!showAssignmentView);
   };
  
   return (
@@ -178,17 +154,11 @@ const AdminDashboard: React.FC = () => {
           <p>Welcome, {currentUser?.name}</p>
         </div>
         <div className="header-right">
-          <button 
-            onClick={handleShowAssignmentView}
-            className={showAssignmentView ? "btn-primary" : "btn-secondary"}
-          >
-            {showAssignmentView ? '📋 Task Board' : '👥 Assign Tasks'}
-          </button>
-          <button 
-            onClick={handleShowAnalytics}
+          <button
+            onClick={handleToggleView}
             className="btn-secondary"
           >
-            {showAnalytics ? '📋 Show Tasks' : '📊 Analytics'}
+            {showAnalytics ? '👥 Assign Tasks' : '📊 Show Analytics'}
           </button>
           <button onClick={handleCreateTask} className="btn-primary">
             + Create Task
@@ -208,21 +178,13 @@ const AdminDashboard: React.FC = () => {
         
         {showAnalytics && analytics ? (
           <Analytics analytics={analytics} onRefresh={loadAnalytics} />
-        ) : showAssignmentView ? (
+        ) : (
           <TaskAssignmentView
             tasks={tasks}
             users={users}
             onAssignTask={handleAssignTask}
             onEditTask={handleEditTask}
             onDeleteTask={handleDeleteTask}
-          />
-        ) : (
-          <TaskBoard
-            tasks={tasks}
-            onEdit={handleEditTask}
-            onDelete={handleDeleteTask}
-            onStatusChange={handleStatusChange}
-            isDraggable={true}
           />
         )}
       </main>
@@ -243,4 +205,3 @@ const AdminDashboard: React.FC = () => {
 };
  
 export default AdminDashboard;
- 
