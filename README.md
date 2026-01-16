@@ -1,32 +1,78 @@
-Complete Task Manager System  
-System Overview :
-Smart Task Manager System - a full-stack web application that helps organizations manage tasks efficiently with role-based access control. 
-The system has two main user types:
-Admins who can create, assign, edit, and delete tasks, plus view analytics
-Users who can view their assigned tasks and mark them as complete
+# 📝 Complete Task Manager System
 
-Technology Stack:
-•	Backend: Python FastAPI + SQLite Database
-•	Frontend: React with TypeScript
-•	Authentication: JWT (JSON Web Tokens)
-•	Styling: CSS
+## 📌 System Overview
 
-Database Management :
-Handles all SQLite database operations.
--	Creates SQLite connection
--	Defines database schema (tables)
--	Auto-creates tables if they don't exist
+The **Smart Task Manager System** is a full-stack web application designed to help organizations manage tasks efficiently using **role-based access control**, visual task tracking, and real-time analytics.
 
-Key features 
-Drag-and-drop Kanban board for visual task management
-Color-coded task cards - green for completed, red for overdue, white for normal
-Real-time analytics dashboard with interactive charts showing task distribution, completion rates, and priority breakdowns
-Interactive tooltips - hover over analytics cards to see actual task details
-Task prioritization (High/Medium/Low) and status tracking (To Do/In Progress/Done)
-Overdue task detection that automatically flags tasks past their due date
-Admin can: Create, Edit, Delete, View All Tasks
-User can: View Assigned Tasks, Mark Complete
+The system supports two primary user roles:
 
+### 👨‍💼 Admin
+- Create, assign, edit, and delete tasks  
+- View all tasks across the organization  
+- Access real-time analytics and reports  
+
+### 👤 User
+- View assigned tasks  
+- Update task status  
+- Mark tasks as complete  
+
+---
+
+## 🛠 Technology Stack
+
+### Backend
+- **Python FastAPI**
+- **SQLite Database**
+
+### Frontend
+- **React with TypeScript**
+- **CSS for Styling**
+
+### Authentication
+- **JWT (JSON Web Tokens)**
+
+---
+
+## 🗄 Database Management
+
+The system uses **SQLite** for lightweight and efficient database operations.
+
+### Responsibilities
+- Creates and manages SQLite database connection  
+- Defines database schema (Users, Tasks)  
+- Automatically creates tables if they do not exist  
+
+---
+
+## ✨ Key Features
+
+### 📋 Task Management
+- Drag-and-drop **Kanban board** for visual task handling  
+- Task prioritization: **High / Medium / Low**  
+- Task status tracking: **To Do / In Progress / Done**  
+- Automatic **overdue task detection** based on due dates  
+
+### 🎨 Visual Indicators
+- 🟢 **Green** – Completed tasks  
+- 🔴 **Red** – Overdue tasks  
+- ⚪ **White** – Normal tasks  
+
+### 📊 Analytics Dashboard
+- Interactive charts displaying:
+  - Task distribution  
+  - Completion rates  
+  - Priority breakdown  
+- Hover-based **tooltips** showing actual task details  
+
+### 🔐 Role-Based Access
+- Admin: Create, Edit, Delete, View All Tasks  
+- User: View Assigned Tasks, Mark Tasks as Complete  
+
+---
+
+## 📂 Project Structure
+
+```plaintext
 task-manager-system/
 │
 ├── backend/
@@ -34,38 +80,32 @@ task-manager-system/
 │   │   ├── __init__.py
 │   │   ├── main.py                    
 │   │   ├── config.py                  
-│   │   ├── database.py                
+│   │   ├── database.py               
 │   │   │
-│   │   ├── models/                    
-│   │   │   ├── __init__.py
+│   │   ├── models/                    # Database models
 │   │   │   ├── user.py
 │   │   │   └── task.py
 │   │   │
-│   │   ├── schemas/                   
-│   │   │   ├── __init__.py
+│   │   ├── schemas/                   # Pydantic schemas
 │   │   │   ├── auth.py
 │   │   │   └── task.py
 │   │   │
-│   │   ├── routers/                  
-│   │   │   ├── __init__.py
-│   │   │   ├── auth.py               
-│   │   │   ├── admin.py              
-│   │   │   └── user.py               
+│   │   ├── routers/                   # API routes
+│   │   │   ├── auth.py
+│   │   │   ├── admin.py
+│   │   │   └── user.py
 │   │   │
-│   │   ├── services/                  
-│   │   │   ├── __init__.py
+│   │   ├── services/                  # Business logic
 │   │   │   ├── auth_service.py
 │   │   │   ├── task_service.py
 │   │   │   └── analytics_service.py
 │   │   │
-│   │   └── utils/                     
-│   │       ├── __init__.py
-│   │       ├── security.py           
-│   │       └── dependencies.py       
+│   │   └── utils/                     # Utilities
+│   │       ├── security.py
+│   │       └── dependencies.py
 │   │
 │   ├── requirements.txt
-│   ├── venv
-│   └── task_manager.db              
+│   └── task_manager.db
 │
 └── frontend/
     ├── public/
@@ -73,7 +113,7 @@ task-manager-system/
     │   └── favicon.ico
     │
     ├── src/
-    │   ├── components/               
+    │   ├── components/
     │   │   ├── Login.tsx
     │   │   ├── Register.tsx
     │   │   ├── AdminDashboard.tsx
@@ -85,14 +125,14 @@ task-manager-system/
     │   │   ├── Analytics.tsx
     │   │   └── TaskTooltip.tsx
     │   │
-    │   ├── services/                
-    │   │   ├── api.ts               
-    │   │   └── auth.ts              
+    │   ├── services/
+    │   │   ├── api.ts
+    │   │   └── auth.ts
     │   │
-    │   ├── types/                   
+    │   ├── types/
     │   │   └── index.ts
     │   │
-    │   ├── styles/                   
+    │   ├── styles/
     │   │   ├── App.css
     │   │   ├── Dashboard.css
     │   │   ├── TaskBoard.css
@@ -100,9 +140,9 @@ task-manager-system/
     │   │   ├── Form.css
     │   │   └── Tooltip.css
     │   │
-    │   ├── App.tsx                   
-    │   ├── index.tsx                 
-    │   └── index.css                
+    │   ├── App.tsx
+    │   ├── index.tsx
+    │   └── index.css
     │
     ├── package.json
-    ├── tsconfig.json
+    └── tsconfig.json
